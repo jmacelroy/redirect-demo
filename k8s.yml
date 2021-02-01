@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-api
+spec:
+  selector:
+    matchLabels:
+      run: client-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: client-api
+    spec:
+      containers:
+      - name: client-api
+        image: okteto.dev/client-api
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-api
+  labels:
+    run: client-api
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    run: client-api
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rpc-service
+spec:
+  selector:
+    matchLabels:
+      run: rpc-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: rpc-service
+    spec:
+      containers:
+      - name: rpc-service
+        image: okteto.dev/rpc-server
+        ports:
+        - containerPort: 8081
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rpc-service
+  labels:
+    run: rpc-service
+spec:
+  ports:
+  - port: 8081
+    protocol: TCP
+  selector:
+    run: rpc-service
