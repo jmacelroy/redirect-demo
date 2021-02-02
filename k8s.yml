@@ -26,6 +26,8 @@ metadata:
   name: client-api
   labels:
     run: client-api
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
 spec:
   ports:
   - port: 8080
