@@ -15,7 +15,7 @@ func main() {
 		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  120 * time.Second,
 		Addr:         ":8080",
-		Handler:      client.DefaultMux("rpc-service.jacob.svc.cluster.local:8081"),
+		Handler:      client.DefaultMux("rpc-service.jacob:8081"),
 	}
 
 	fmt.Println("listening on :8080...")

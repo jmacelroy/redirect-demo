@@ -31,6 +31,7 @@ func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("RPC Endpoint: %s\n", h.rpcEndpoint)
 	conn, err := grpc.Dial(h.rpcEndpoint, grpc.WithInsecure())
 	if err != nil {
 		http.Error(w, fmt.Sprintf("rpc: %+v", err), http.StatusInternalServerError)
