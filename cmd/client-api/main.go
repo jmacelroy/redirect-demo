@@ -15,7 +15,7 @@ func main() {
 		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  120 * time.Second,
 		Addr:         ":8080",
-		Handler:      client.DefaultMux("rpc-server:8081"),
+		Handler:      client.DefaultMux("rpc-service:8081"),
 	}
 
 	fmt.Println("listening on :8080...")
