@@ -3,5 +3,5 @@ deploy:
   - okteto build -t okteto.dev/rpc-server -f Dockerfile-rpc-server .
   - kubectl apply -f k8s.yml
 devs:
-  - client-api/okteto.yml
-  - rpc-server/okteto.yml
+  - okteto-client-api.yml
+  - okteto-rpc-server.yml
