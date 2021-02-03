@@ -3,6 +3,7 @@ package lootdata
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -47,6 +48,6 @@ func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("json: %+v", err), http.StatusInternalServerError)
 		return
 	}
+	log.Printf("returning %s", bytes)
 	fmt.Fprint(w, string(bytes))
-	w.WriteHeader(http.StatusOK)
 }

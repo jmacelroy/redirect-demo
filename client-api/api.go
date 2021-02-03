@@ -1,8 +1,8 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -31,12 +31,14 @@ func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("data: %+v", err), http.StatusInternalServerError)
 		return
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		http.Error(w, "unexpected data resp code", http.StatusInternalServerError)
 		return
 	}
 
-	bytes, err := json.MarshalIndent(resp, "", "\t")
+	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("json: %+v", err), http.StatusInternalServerError)
 		return
