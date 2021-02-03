@@ -61,12 +61,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rpc-service
+  name: loot-data
   labels:
-    run: rpc-service
+    run: loot-data
 spec:
   ports:
   - port: 8081
     protocol: TCP
   selector:
-    run: rpc-service
+    run: loot-data
