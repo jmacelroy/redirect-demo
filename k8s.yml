@@ -40,24 +40,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rpc-service
+  name: loot-data
 spec:
   selector:
     matchLabels:
-      run: rpc-service
+      run: loot-data
   replicas: 1
   template:
     metadata:
       labels:
-        run: rpc-service
+        run: loot-data
     spec:
       containers:
-      - name: rpc-service
-        image: okteto.dev/rpc-server
+      - name: loot-data
+        image: okteto.dev/loot-data
         ports:
         - containerPort: 8081
-      - name: proxy
-        image:
 
 ---
 apiVersion: v1
