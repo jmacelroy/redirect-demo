@@ -56,6 +56,8 @@ spec:
         image: okteto.dev/rpc-server
         ports:
         - containerPort: 8081
+      - name: proxy
+        image:
 
 ---
 apiVersion: v1

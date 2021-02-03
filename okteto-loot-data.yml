@@ -1,4 +1,4 @@
-name: rpc-service
+name: loot-data
 image: okteto/golang:1
 command: bash
 securityContext:
