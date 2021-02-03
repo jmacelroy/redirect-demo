@@ -42,10 +42,11 @@ func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
 		lootData.AveragePrice7D = 805000.79
 	}
 
-	err := json.NewEncoder(w).Encode(&lootData)
+	bytes, err := json.Marshal(&lootData)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("json: %+v", err), http.StatusInternalServerError)
 		return
 	}
+	fmt.Fprint(w, string(bytes))
 	w.WriteHeader(http.StatusOK)
 }

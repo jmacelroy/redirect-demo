@@ -31,6 +31,10 @@ func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("data: %+v", err), http.StatusInternalServerError)
 		return
 	}
+	if resp.StatusCode != http.StatusOK {
+		http.Error(w, "unexpected data resp code", http.StatusInternalServerError)
+		return
+	}
 
 	bytes, err := json.MarshalIndent(resp, "", "\t")
 	if err != nil {
