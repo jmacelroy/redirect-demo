@@ -68,7 +68,6 @@ metadata:
   labels:
     run: loot-data-alternate
 spec:
-  clusterIP: "None"
   ports:
   - port: 8081
     protocol: TCP
@@ -159,8 +158,7 @@ data:
       clusters:
       - name: alternate_service
         connect_timeout: 0.25s
-        type: strict_dns
-        lb_policy: round_robin
+        type: logical_dns
         load_assignment:
           cluster_name: local_service
           endpoints:
@@ -172,8 +170,7 @@ data:
                     port_value: 8081
       - name: local_service
         connect_timeout: 0.25s
-        type: strict_dns
-        lb_policy: round_robin
+        type: logical_dns
         load_assignment:
           cluster_name: local_service
           endpoints:
