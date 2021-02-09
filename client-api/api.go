@@ -1,15 +1,18 @@
+
 package client
 
 import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"log"
+	"encoding/json"
 )
 
 func DefaultMux(dataEndpoint string) *http.ServeMux {
 	handlers := Handlers{dataEndpoint: dataEndpoint}
 	mux := http.NewServeMux()
-	mux.Handle("/loot/description", http.HandlerFunc(handlers.LootData))
+	mux.Handle("/", http.HandlerFunc(handlers.LootData))
 	return mux
 }
 
@@ -18,15 +21,19 @@ type Handlers struct {
 }
 
 func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
-	// names, ok := r.URL.Query()["name"]
-	// log.Printf("querying for description of %s\n", names)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://%s/", h.dataEndpoint), nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	// if !ok || len(names[0]) < 1 {
-	// 	http.Error(w, "name query parameter missing", http.StatusBadRequest)
-	// 	return
-	// }
+	redirectHeader := r.Header.Get("x-okteto-redirect")
+	if redirectHeader != "" {
+		req.Header.Set("x-okteto-redirect", redirectHeader)
+	}
 
-	resp, err := http.Get(fmt.Sprintf("http://%s/", h.dataEndpoint))
+	client := http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("data: %+v", err), http.StatusInternalServerError)
 		return
