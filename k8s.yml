@@ -59,6 +59,9 @@ spec:
         image: okteto.dev/loot-data
         ports:
         - containerPort: 8081
+        env:
+        - name: DEMO_ENABLE_FULL_DATA
+          value: "true"
 
 ---
 apiVersion: v1
