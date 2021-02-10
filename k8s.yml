@@ -18,6 +18,9 @@ spec:
         image: okteto.dev/client-api
         ports:
         - containerPort: 8080
+        env:
+        - name: LOOT_DATA_ENDPOINT
+          value: "loot-data.jacob:8081"
 
 ---
 apiVersion: v1
