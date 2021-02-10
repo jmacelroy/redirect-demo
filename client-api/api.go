@@ -1,12 +1,9 @@
-
 package client
 
 import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"log"
-	"encoding/json"
 )
 
 func DefaultMux(dataEndpoint string) *http.ServeMux {
