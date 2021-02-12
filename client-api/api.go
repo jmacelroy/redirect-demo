@@ -6,19 +6,18 @@ import (
 	"net/http"
 )
 
-func DefaultMux(dataEndpoint string) *http.ServeMux {
-	handlers := Handlers{dataEndpoint: dataEndpoint}
-	mux := http.NewServeMux()
-	mux.Handle("/", http.HandlerFunc(handlers.LootData))
-	return mux
-}
-
 type Handlers struct {
-	dataEndpoint string
+	DataEndpoint string
 }
 
 func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
-	resp, err := http.Get(fmt.Sprintf("http://%s/", h.dataEndpoint))
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://%s/", h.DataEndpoint), nil)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("data req: %+v", err), http.StatusInternalServerError)
+	}
+	PropagateFromContext(r.Context(), req)
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("data: %+v", err), http.StatusInternalServerError)
 		return
