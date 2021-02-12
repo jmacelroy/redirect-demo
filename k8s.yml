@@ -20,7 +20,7 @@ spec:
         - containerPort: 8080
         env:
         - name: LOOT_DATA_ENDPOINT
-          value: "loot-data.jacob:8081"
+          value: "loot-data.staging:8081"
 
 ---
 apiVersion: v1
