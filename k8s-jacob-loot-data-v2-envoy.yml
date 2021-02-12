@@ -70,34 +70,3 @@ data:
         socket_address:
           address: 0.0.0.0
           port_value: 8082
-
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    dev.okteto.com/auto-ingress: "true"
-    dev.okteto.com/generate-host: client-api-v2
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/limit-connections: "40"
-    nginx.ingress.kubernetes.io/limit-rpm: "400"
-    nginx.ingress.kubernetes.io/limit-rps: "40"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header x-okteto-divert loot-data:nacho:1234;
-  labels:
-    dev.okteto.com: "true"
-  name: okteto-client-api-v2
-  namespace: jacob
-spec:
-  rules:
-  - host: client-api-v2-jacob.jacob.dev.okteto.net
-    http:
-      paths:
-      - backend:
-          serviceName: client-api
-          servicePort: 8080
-        path: /
-  tls:
-  - hosts:
-    - client-api-v2-jacob.jacob.dev.okteto.net

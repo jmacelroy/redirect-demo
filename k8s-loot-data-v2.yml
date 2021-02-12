@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loot-data
+spec:
+  selector:
+    matchLabels:
+      run: loot-data
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: loot-data
+    spec:
+      containers:
+      - name: loot-data
+        image: okteto.dev/loot-data
+        ports:
+        - containerPort: 8081
+        env:
+        - name: DEMO_ENABLE_FULL_DATA
+          value: "true"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loot-data
+  labels:
+    run: loot-data
+spec:
+  ports:
+  - port: 8081
+    protocol: TCP
+  selector:
+    run: loot-data
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    dev.okteto.com/generate-host: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header x-okteto-divert loot-data:jacob:1234;
+  name: client-api-jacob
+  namespace: staging
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: client-api
+          servicePort: 8080
+        path: /
