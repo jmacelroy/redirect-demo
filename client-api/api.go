@@ -15,7 +15,7 @@ func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, fmt.Sprintf("data req: %+v", err), http.StatusInternalServerError)
 	}
-	PropagateFromContext(r.Context(), req)
+	req.Header.Set(DivertHeaderName, FromContext(r.Context()))
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

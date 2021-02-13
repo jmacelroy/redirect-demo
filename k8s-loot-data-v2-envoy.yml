@@ -29,7 +29,7 @@ data:
                       prefix: "/"
                       headers:
                         - name: "x-okteto-divert"
-                          exact_match: "loot-data:nacho:1234"
+                          exact_match: "loot-data:jacob:1234"
                     route:
                       cluster: alternate_service
                   - match:
@@ -62,7 +62,7 @@ data:
             - endpoint:
                 address:
                   socket_address:
-                    address: loot-data.nacho
+                    address: loot-data.jacob
                     port_value: 8081
     admin:
       access_log_path: "/dev/null"

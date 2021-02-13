@@ -2,43 +2,31 @@ package client
 
 import (
 	"context"
-	"errors"
 	"net/http"
 )
 
-const divertHeaderName = "x-okteto-redirect"
+const DivertHeaderName = "x-okteto-divert"
 
-type divertHeaderKey struct{}
+type divertHeaderKey string
 
 // DivertHeaderCtxKey is the unique key value for diver header
 // value injected into context.
-var DivertHeaderCtxKey = divertHeaderKey{}
-
-// PropagateFromContext will retrieve divert headers from the context provided
-// and add the correct headers to the provided http request so that they can
-// be propagated to the subsequent http request in a service chain.
-func PropagateFromContext(ctx context.Context, r *http.Request) *http.Request {
-	divertHeaderValue, _ := FromContext(r.Context())
-	if divertHeaderValue != "" {
-		r.Header.Set(divertHeaderName, divertHeaderValue)
-	}
-	return r
-}
+var divertHeaderCtxKey = divertHeaderKey(DivertHeaderName)
 
 // FromContext provides the divert header values stored in context.
-func FromContext(ctx context.Context) (string, error) {
-	value, ok := ctx.Value(DivertHeaderCtxKey).(string)
-	if !ok {
-		return "", errors.New("unable to convert header value")
+func FromContext(ctx context.Context) string {
+	if v := ctx.Value(divertHeaderCtxKey); v != nil {
+		val, _ := v.(string)
+		return val
 	}
-	return value, nil
+	return ""
 }
 
 // FromHeaders extracts divert headers from an http request
 // and provides the value. If missing then empty string
 // is provided.
 func FromHeaders(r *http.Request) string {
-	return r.Header.Get(divertHeaderName)
+	return r.Header.Get(DivertHeaderName)
 }
 
 // InjectDivertHeaderContext is an http middleware handler for
@@ -46,7 +34,7 @@ func FromHeaders(r *http.Request) string {
 func InjectDivertHeaderContext() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			ctx := context.WithValue(r.Context(), DivertHeaderCtxKey, FromHeaders(r))
+			ctx := context.WithValue(r.Context(), divertHeaderCtxKey, r.Header.Get(DivertHeaderName))
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
