@@ -17,7 +17,10 @@ func main() {
 		log.Fatal("LOOT_DATA_ENDPOINT env var required")
 	}
 
-	handlers := client.Handlers{lootDataEndpoint}
+	handlers := client.Handlers{
+		DataEndpoint:   lootDataEndpoint,
+		NestFleaMarket: false,
+	}
 	mux := http.NewServeMux()
 	mux.Handle("/", http.HandlerFunc(handlers.LootData))
 

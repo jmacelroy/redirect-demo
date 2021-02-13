@@ -1,13 +1,38 @@
 package client
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
 type Handlers struct {
-	DataEndpoint string
+	DataEndpoint   string
+	NestFleaMarket bool
+}
+
+type LootData struct {
+	ItemData
+	FleaMarketData
+}
+
+type ItemData struct {
+	Name           string  `json:"name,omitempty"`
+	Type           string  `json:"type,omitempty"`
+	Weight         float32 `json:"weight,omitempty"`
+	GridSize       string  `json:"grid_size,omitempty"`
+	LootExperience int32   `json:"loot_experience,omitempty"`
+}
+
+type FleaMarketData struct {
+	Rarity          string  `json:"rarity,omitempty"`
+	AveragePrice24H float32 `json:"average_price_24h,omitempty"`
+	AveragePrice7D  float32 `json:"average_price_7d,omitempty"`
+}
+
+type NestedLootData struct {
+	Item ItemData       `json:"item"`
+	Flea FleaMarketData `json:"flea"`
 }
 
 func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
@@ -29,10 +54,40 @@ func (h Handlers) LootData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bytes, err := ioutil.ReadAll(resp.Body)
+	var lootData LootData
+	err = json.NewDecoder(resp.Body).Decode(&lootData)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("json: %+v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("bad loot json %+v", err), http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(w, string(bytes))
+
+	if h.NestFleaMarket {
+		nested := NestedLootData{
+			Item: ItemData{
+				Name:           lootData.Name,
+				Type:           lootData.Type,
+				Weight:         lootData.Weight,
+				GridSize:       lootData.GridSize,
+				LootExperience: lootData.LootExperience,
+			},
+			Flea: FleaMarketData{
+				Rarity:          lootData.Rarity,
+				AveragePrice24H: lootData.AveragePrice24H,
+				AveragePrice7D:  lootData.AveragePrice7D,
+			},
+		}
+		bytes, err := json.MarshalIndent(&nested, "", "\t")
+		if err != nil {
+			http.Error(w, fmt.Sprintf("resp json: %+v", err), http.StatusInternalServerError)
+			return
+		}
+		fmt.Fprint(w, string(bytes))
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(lootData)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
