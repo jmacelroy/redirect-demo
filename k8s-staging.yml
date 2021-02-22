@@ -92,6 +92,12 @@ metadata:
   name: envoy-sidecar-config
 data:
   envoy.yaml: |
+    node:
+      cluster: redirect-demo
+      id: redirect-demo-id
+    dynamic_resources:
+      cds_config:
+        path: /var/lib/envoy/cds.yaml
     static_resources:
       listeners:
       - address:
@@ -119,22 +125,31 @@ data:
               http_filters:
               - name: envoy.filters.http.router
                 typed_config: {}
-      clusters:
-      - name: local_service
-        connect_timeout: 0.25s
-        type: logical_dns
-        load_assignment:
-          cluster_name: local_service
-          endpoints:
-          - lb_endpoints:
-            - endpoint:
-                address:
-                  socket_address:
-                    address: 127.0.0.1
-                    port_value: 8081
     admin:
       access_log_path: "/dev/null"
       address:
         socket_address:
           address: 0.0.0.0
           port_value: 8082
+
+___
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: envoy-cds
+data:
+  cds.yaml: |
+    resources:
+    - "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
+      name: local_service
+      connect_timeout: 0.25s
+      type: logical_dns
+      load_assignment:
+        cluster_name: local_service
+        endpoints:
+        - lb_endpoints:
+          - endpoint:
+              address:
+                socket_address:
+                  address: 127.0.0.1
+                  port_value: 8081
