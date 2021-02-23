@@ -19,7 +19,7 @@ func main() {
 
 	handlers := client.Handlers{
 		DataEndpoint:   lootDataEndpoint,
-		NestFleaMarket: false,
+		NestFleaMarket: true,
 	}
 	mux := http.NewServeMux()
 	mux.Handle("/", http.HandlerFunc(handlers.LootData))

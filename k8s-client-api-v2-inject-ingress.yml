@@ -7,7 +7,6 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_set_header x-okteto-divert loot-data:ramiro:1234;
   name: client-api-ramiro
-  namespace: staging
 spec:
   rules:
   - http:

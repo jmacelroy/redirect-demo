@@ -1,5 +1,7 @@
 name: loot-data
-image: okteto/golang:1
+image:
+  name: okteto/golang:1
+  dockerfile: Dockerfile-client-api
 command: bash
 securityContext:
   capabilities:
