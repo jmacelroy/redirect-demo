@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-const DivertHeaderName = "x-okteto-divert"
+const DivertHeaderName = "x-okteto-dvrt"
 
 type divertHeaderKey string
 
