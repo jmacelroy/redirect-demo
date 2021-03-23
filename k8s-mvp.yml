@@ -20,7 +20,7 @@ spec:
         - containerPort: 8080
         env:
         - name: LOOT_DATA_ENDPOINT
-          value: "loot-data:8081"
+          value: "loot-data:1024"
 
 ---
 apiVersion: v1
@@ -29,7 +29,6 @@ metadata:
   name: client-api
   labels:
     run: client-api
-  annotations:
     dev.okteto.com/auto-ingress: "true"
 spec:
   ports:
@@ -52,6 +51,8 @@ spec:
     metadata:
       labels:
         run: loot-data
+      # annotations:
+      #   divert.okteto.com/inject-sidecar: "true"
     spec:
       containers:
       - name: loot-data
@@ -68,7 +69,10 @@ metadata:
     run: loot-data
 spec:
   ports:
-  - port: 8081
-    protocol: TCP
+  - port: 1024
+    name: main
+    targetPort: 8081
+  - port: 1025
+    name: decoy
   selector:
     run: loot-data
