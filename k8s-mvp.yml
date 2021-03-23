@@ -51,8 +51,8 @@ spec:
     metadata:
       labels:
         run: loot-data
-      annotations:
-        divert.okteto.com/inject-sidecar: "true"
+      # annotations:
+      #   divert.okteto.com/inject-sidecar: "true"
     spec:
       containers:
       - name: loot-data
