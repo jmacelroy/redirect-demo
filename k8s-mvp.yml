@@ -18,6 +18,13 @@ spec:
         image: okteto.dev/client-api
         ports:
         - containerPort: 8080
+        resources:
+          limits:
+            cpu: 10m
+            memory: 32Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
         env:
         - name: LOOT_DATA_ENDPOINT
           value: "loot-data:1024"
@@ -53,13 +60,21 @@ spec:
       labels:
         run: loot-data
       annotations:
-        divert.okteto.com/inject-sidecar: "true"
+        divert.okteto.com/inject-sidecar: "auto"
     spec:
       containers:
       - name: loot-data
         image: okteto.dev/loot-data
         ports:
         - containerPort: 8081
+        resources:
+          limits:
+            cpu: 10m
+            memory: 32Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+
 
 ---
 apiVersion: v1
