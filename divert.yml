@@ -1,0 +1,16 @@
+---
+apiVersion: divert.okteto.com/v1
+kind: Divert
+metadata:
+  name: my-divert
+spec:
+  ingress:
+    name:  okteto-client-api
+    namespace: jacob
+  fromService:
+    name: loot-data
+    port: 1024
+    namespace: jacob
+  toService:
+    name: loot-data
+    namespace: staging
