@@ -1,0 +1,7 @@
+name: loot-data
+image: okteto/golang:1
+command: bash
+environment:
+  - DEMO_ENABLE_FULL_DATA=true
+sync:
+  - .:/usr/src/app
