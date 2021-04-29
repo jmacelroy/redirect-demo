@@ -1,16 +1,16 @@
 ---
-apiVersion: divert.okteto.com/v1
+apiVersion: weaver.okteto.com/v1
 kind: Divert
 metadata:
-  name: my-divert
+  name: test-divert
 spec:
   ingress:
     name:  okteto-client-api
-    namespace: jacob
+    namespace: weaver
   fromService:
     name: loot-data
     port: 1024
-    namespace: jacob
+    namespace: weaver
   toService:
     name: loot-data
-    namespace: staging
+    namespace: weaver-prime
