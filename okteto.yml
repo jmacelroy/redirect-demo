@@ -5,3 +5,9 @@ environment:
   - DEMO_ENABLE_FULL_DATA=true
 sync:
   - .:/usr/src/app
+persistentVolume:
+  enabled: false
+divert:
+  ingress: okteto-client-api
+  service: loot-data
+  port: 1024
