@@ -1,0 +1,6 @@
+deploy:
+  - okteto build -t okteto.dev/client-api -f Dockerfile.client-api
+  - okteto build -t okteto.dev/loot-data -f Dockerfile.loot-data
+  - kubectl apply -f k8s.yml
+devs:
+  - okteto.yml
